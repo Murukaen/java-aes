@@ -3,10 +3,17 @@
  */
 package ro.uoradea.ieti.sd.labs;
 
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Base64;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
@@ -26,6 +33,20 @@ public class App {
         byte[] iv = new byte[16];
         new SecureRandom().nextBytes(iv);
         return new IvParameterSpec(iv);
+    }
+
+    public static String encrypt(String algo, String input, SecretKey key, IvParameterSpec iv) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance(algo);
+        cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+        byte[] cipherText = cipher.doFinal(input.getBytes());
+        return Base64.getEncoder().encodeToString(cipherText);
+    }
+
+    public static String decrypt(String algo, String cipherText, SecretKey key, IvParameterSpec iv) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance(algo);
+        cipher.init(Cipher.DECRYPT_MODE, key, iv);
+        byte[] plainText = cipher.doFinal(Base64.getDecoder().decode(cipherText));
+        return new String(plainText);
     }
 
     public static void main(String[] args) {

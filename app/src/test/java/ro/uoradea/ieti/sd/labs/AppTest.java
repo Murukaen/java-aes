@@ -9,8 +9,13 @@ import ro.uoradea.ieti.sd.labs.App;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
@@ -33,5 +38,15 @@ class AppTest {
     @Test void generatedIVHasTheCorrectLength() {
         IvParameterSpec iv = App.generateIV();
         assertEquals(128, iv.getIV().length * 8);
+    }
+
+    @Test void decryptionOfCipherTextShouldReturnOriginal() throws NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+        String input = "test";
+        SecretKey key = App.generateKey(128);
+        IvParameterSpec iv = App.generateIV();
+        String algo = "AES/CBC/PKCS5Padding";
+        String cipherText = App.encrypt(algo, input, key, iv);
+        String decrypted = App.decrypt(algo, cipherText, key, iv);
+        assertEquals(input, decrypted);
     }
 }
