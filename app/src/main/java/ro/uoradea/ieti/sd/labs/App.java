@@ -3,9 +3,21 @@
  */
 package ro.uoradea.ieti.sd.labs;
 
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
 public class App {
     public String getGreeting() {
         return "Hello World!";
+    }
+
+    public static SecretKey generateKey(int n) throws NoSuchAlgorithmException {
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+        keyGenerator.init(n);
+        SecretKey key = keyGenerator.generateKey();
+        return key;
     }
 
     public static void main(String[] args) {

@@ -9,9 +9,23 @@ import ro.uoradea.ieti.sd.labs.App;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.SecretKey;
+
 class AppTest {
     @Test void appHasAGreeting() {
         App classUnderTest = new App();
         assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+    }
+
+    @Test void generatedKeyHasCorrectLength() throws NoSuchAlgorithmException {
+        SecretKey key = App.generateKey(128);
+        assertEquals(128, key.getEncoded().length * 8);
+    }
+
+    @Test void generatedKeyHasCorrectAlgo() throws NoSuchAlgorithmException {
+        SecretKey key = App.generateKey(128);
+        assertEquals("AES", key.getAlgorithm());
     }
 }
