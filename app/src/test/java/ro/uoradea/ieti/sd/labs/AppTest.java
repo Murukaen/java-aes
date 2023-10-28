@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 
 class AppTest {
     @Test void appHasAGreeting() {
@@ -27,5 +28,10 @@ class AppTest {
     @Test void generatedKeyHasCorrectAlgo() throws NoSuchAlgorithmException {
         SecretKey key = App.generateKey(128);
         assertEquals("AES", key.getAlgorithm());
+    }
+
+    @Test void generatedIVHasTheCorrectLength() {
+        IvParameterSpec iv = App.generateIV();
+        assertEquals(128, iv.getIV().length * 8);
     }
 }

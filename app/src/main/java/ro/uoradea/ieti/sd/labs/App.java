@@ -4,9 +4,11 @@
 package ro.uoradea.ieti.sd.labs;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 
 public class App {
     public String getGreeting() {
@@ -18,6 +20,12 @@ public class App {
         keyGenerator.init(n);
         SecretKey key = keyGenerator.generateKey();
         return key;
+    }
+
+    public static IvParameterSpec generateIV() {
+        byte[] iv = new byte[16];
+        new SecureRandom().nextBytes(iv);
+        return new IvParameterSpec(iv);
     }
 
     public static void main(String[] args) {
